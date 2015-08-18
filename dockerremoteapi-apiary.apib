@@ -1,0 +1,77 @@
+FORMAT: 1A
+
+HOST: unix:///var/run/docker.sock
+
+# Docker Remote API v1.16
+
+TODO: [upgrade to latest version](https://github.com/docker/docker/blob/master/docs/reference/api/docker_remote_api_v1.21.md)
+TODO: use attributes
+TODO: fix URL "http://unix///var/run/docker.sock/containers/json" isn't what we expected
+
+## Brief introduction
+
+- The Remote API has replaced rcli.
+- The daemon listens on unix:///var/run/docker.sock but you can Bind Docker to another host/port or a Unix socket.
+- The API tends to be REST, but for some complex commands, like attach or pull, the HTTP connection is hijacked to transport STDOUT, STDIN and STDERR.
+
+# Group Endpoints
+
+## Containers [/containers/json?{all,since,before,size,limit,filters}]
+
++ Parameters
+    + all  ... 1/True/true or 0/False/false, Show all containers. Only running containers are shown by default (i.e., this defaults to false)
+    + limit ... Show limit last created containers, include non-running ones.
+    + before ... Show only containers created since Id, include non-running ones
+    + since ...  Show only containers created before Id, include non-running ones. 
+    + size ...  1/True/true or 0/False/false, Show the containers sizes
+    + filters ... a json encoded value of the filters (a map[string][]string) to process on the containers list. Available filters:
+            - exited=<int> -- containers with exit code of <int>
+            - status=(restarting|running|paused|exited)
+
+### List containers [GET]
+
++ Response 200 (application/json)
+
+        [
+             {
+                     "Id": "8dfafdbc3a40",
+                     "Image": "base:latest",
+                     "Command": "echo 1",
+                     "Created": 1367854155,
+                     "Status": "Exit 0",
+                     "Ports": [{"PrivatePort": 2222, "PublicPort": 3333, "Type": "tcp"}],
+                     "SizeRw": 12288,
+                     "SizeRootFs": 0
+             },
+             {
+                     "Id": "9cd87474be90",
+                     "Image": "base:latest",
+                     "Command": "echo 222222",
+                     "Created": 1367854155,
+                     "Status": "Exit 0",
+                     "Ports": [],
+                     "SizeRw": 12288,
+                     "SizeRootFs": 0
+             },
+             {
+                     "Id": "3176a2479c92",
+                     "Image": "base:latest",
+                     "Command": "echo 3333333333333333",
+                     "Created": 1367854154,
+                     "Status": "Exit 0",
+                     "Ports":[],
+                     "SizeRw":12288,
+                     "SizeRootFs":0
+             },
+             {
+                     "Id": "4cb07b47f9fb",
+                     "Image": "base:latest",
+                     "Command": "echo 444444444444444444444444444444444",
+                     "Created": 1367854152,
+                     "Status": "Exit 0",
+                     "Ports": [],
+                     "SizeRw": 12288,
+                     "SizeRootFs": 0
+             }
+        ]
+
